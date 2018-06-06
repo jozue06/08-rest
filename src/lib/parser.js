@@ -1,4 +1,6 @@
 'use strict';
+
+// First Party Modules
 const url = require('url');
 const queryString = require('querystring');
 
@@ -6,29 +8,38 @@ module.exports = (req) => {
 
   return new Promise( (resolve,reject) => {
 
-    if( !(req || req.url) ) { reject('Invalid Request Object. Cannot Parse!!'); }
-    console.log('pre', req.url);
-    req.url = url.parse(req.url);
-    console.log('post', req.url);
+    if( !(req || req.url) ) { reject('Invalid Request Object. Cannot Parse'); }
 
-    req.url.query = queryString.parse(req.url.query);
+    // req.url = http://localhost:3000/api/v1/notes?id=12345
+    req.parsed = url.parse(req.url);
+    /*
+        req.parsed = {
+          pathname: '/api/vi/notes',
+          query: '?id=12345&name=John',
+        }
+       */
 
-    console.log('url.query', req.url.query);
-    
+    req.query = queryString.parse(req.parsed.query);
+    /*
+        req.query = {
+          id:12345,
+          name:'John'
+        }
+       */
+
     if(! req.method.match(/POST|PUT|PATCH/) ) {
       resolve(req);
     }
 
     let text = '';
-    // console.log('text 1 ', text);
+
     req.on('data', (buffer) => {
       text += buffer.toString();
     });
-    // console.log('text 2 ', text);
+
     req.on('end', () => {
       try{
-        req.body = text;
-        // console.log('text 3 ', req.body);
+        req.body = JSON.parse(text);
         resolve(req);
       }
       catch(err) { reject(err); }

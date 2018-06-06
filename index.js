@@ -1,6 +1,6 @@
 'use strict';
-const dotenv = require('dotenv').config();
-const server = require('./src/app.js');
+require('dotenv').config();
+
 const PORT = process.env.PORT;
 
 const ENV = {};
@@ -9,4 +9,4 @@ ENV.productionApiUrl = 'https://josh-cowsay.herokuapp.com';
 
 
 
-server.start( PORT, () => console.log(`Server up on ${PORT}`));
+require('./src/app.js').start( PORT, () => console.log(`Server up on ${PORT}`));

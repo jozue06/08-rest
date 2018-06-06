@@ -1,81 +1,38 @@
-
 'use strict';
 
-const http = require('http');
-const fs = require('fs');
-const cowsay = require('cowsay');
-const parser = require('./lib/parser.js');
+// First Party Modules
+let http = require('http');
 
-const requestHandler = (req,res) => {
+// Our modules
+const router = require('./lib/router.js');
+const api = require('./api/api.js');
 
-  let errPage = (err) => {
-    console.log('error!', err);
-    res.writeHead(500);
-    res.write(err);
-    res.end(); 
-  };
+// Flag to know if we are up and going
+let isRunning = false;
 
-  parser(req)
-    .then( req => {
-      
-      if ( req.method === 'GET' && req.url.pathname === '/' ) {
-        fs.readFile(`${__dirname}/../public/index.html`, (err, data) => {
-          if(err) { return errPage();}
-          res.setHeader('Content-Type', 'text/html');
-          res.statusCode = 200;
-          res.statusMessage = 'OK';
-          res.write(data.toString());
-          res.end();
-        });
-      }
-      else if ( req.method === 'GET' && req.url.pathname === '/api/cowsay' ) {
-        fs.readFile(`${__dirname}/../public/cowsay.html`, (err, data) =>{
-          if(err) { return errPage();}
-          let html = data.toString();
-          let text = cowsay.say({text: req.url.query.text});
-          res.setHeader('Content-Type', 'text/html');
-          res.statusCode = 200;
-          res.statusMessage = 'OK';
-          res.write(html.replace('{{cowsay}}',text));
-          res.end();
-        });
-      }
-      else if ( req.method === 'POST' && req.url.pathname === '/api/cowsay' ) {
-        fs.readFile(`${__dirname}/../public/cowsay.html`, (err, data) => {
-          if(err) { return errPage();}
-          let content = data;
-          if(!req.body ) { content = 'Erorrs';}
-          else if (req.body) 
-            content = req.body;
-          
-          else{ content = 'Erorrss';}
-
-          let obj = {content : content};
-          res.setHeader('Content-Type', 'text/json');
-          res.statusCode = 200;
-          res.statusMessage = 'OK';
-          res.write( JSON.stringify(obj));
-          console.log(obj);
-          res.end();
-        });       
-      }
-
-      else {
-        res.setHeader('Content-Type', 'text/html');
-        res.statusCode = 404;
-        res.statusMessage = 'Not Found';
-        res.write('Resource Not Found');
-        res.end();
-      }
-
-    })
-    .catch(errPage);
-};
-
-
-const app = http.createServer(requestHandler);
+// This will open up an http server connection, using router.route
+// as our entry point.  That method will get run on every connection
+const app = http.createServer( router.route );
 
 module.exports = {
-  start: (port,callback) => app.listen(port,callback),
-  stop: (callback) => app.close(callback),
+  start: (port) => {
+    if(! isRunning) {
+      app.listen(port, (err) => {
+        if(err) { throw err; }
+        // Tick the running flag
+        isRunning = true;
+        console.log('Server is up on port', port);
+      });
+    }
+    else {
+      console.log('Server is already running');
+    }
+  },
+
+  stop: () => {
+    app.close( () => {
+      isRunning = false;
+      console.log('Server has been stopped');
+    });
+  },
 };
