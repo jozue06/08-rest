@@ -15,7 +15,7 @@ describe('Simple Web Server', () => {
 
   it('handles an invalid get request with a 404', () => {
 
-    return superagent.get('http://localhost:3000/foo')
+    return superagent.get('http://localhost:33333/foo')
       .then(response => true)
       .catch(response => expect(response.status).toEqual(404));
 
@@ -23,7 +23,7 @@ describe('Simple Web Server', () => {
 
   it('handles a valid get request', () => {
 
-    return superagent.get('http://localhost:3000/')
+    return superagent.get('http://localhost:3333/')
       .then(response => {
         expect(response.statusCode).toEqual(200);
         expect(response.text).toEqual(expect.stringContaining('h1'));
@@ -34,7 +34,7 @@ describe('Simple Web Server', () => {
 
   it('handles a get request with a query string', () => {
 
-    return superagent.get('http://localhost:3000/api/cowsay?text=here')
+    return superagent.get('http://localhost:3333/api/cowsay?text=here')
       .then(response => {
         expect(response.statusCode).toEqual(200);
         expect(response.text).toEqual(expect.stringContaining('here'));
@@ -48,7 +48,7 @@ describe('Simple Web Server', () => {
     let expected = JSON.stringify(obj);
     console.log(obj);
     console.log(expected);
-    return superagent.post('http://localhost:3000/api/cowsay')
+    return superagent.post('http://localhost:3333/api/cowsay')
       .send(obj)
       .then(response => {
         expect(response.text).toBe(expected);

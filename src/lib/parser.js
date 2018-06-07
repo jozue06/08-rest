@@ -11,15 +11,18 @@ module.exports = (req) => {
     if( !(req || req.url) ) { reject('Invalid Request Object. Cannot Parse'); }
 
     // req.url = http://localhost:3000/api/v1/notes?id=12345
+    console.log('pre', req.url); // Request (req) is a special kind of object. It is called an incoming message object.
     req.parsed = url.parse(req.url);
+    console.log('post', req.url);
     /*
-        req.parsed = {
-          pathname: '/api/vi/notes',
-          query: '?id=12345&name=John',
-        }
-       */
-
+    req.parsed = {
+      pathname: '/api/vi/notes',
+      query: '?id=12345&name=John',
+    } 
+    */
+   
     req.query = queryString.parse(req.parsed.query);
+    console.log('url.query', req.parsed.query);
     /*
         req.query = {
           id:12345,
@@ -35,6 +38,7 @@ module.exports = (req) => {
 
     req.on('data', (buffer) => {
       text += buffer.toString();
+      console.log(buffer);//?
     });
 
     req.on('end', () => {

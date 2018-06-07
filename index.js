@@ -3,9 +3,9 @@ require('dotenv').config();
 
 const PORT = process.env.PORT;
 
-const ENV = {};
+// const ENV = {};
 
-ENV.productionApiUrl = 'https://josh-cowsay.herokuapp.com';
+// ENV.productionApiUrl = 'https://josh-cowsay.herokuapp.com';
 
 
 

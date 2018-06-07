@@ -4,7 +4,7 @@ module.exports = function () {
 
     files: ['./src/lib/**/*.js'],
     
-    tests: ['./**/*.test.js'],
+    tests: ['./__test__/**/*.test.js'],
     
     env: {
       type: 'node',
