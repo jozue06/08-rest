@@ -42,24 +42,24 @@ methods.forEach( (method) => {
 });
 
 router.route = (req,res) => {
-
+  
   return parser(req)
     .then(req => {
-      // Determine which of the things in the routing table matches us
-      // i.e. if the request is for http://localhost/foo
-      // We would look for this:  router.routes.GET['/foo'] and then run the function that's assigned
+    // Determine which of the things in the routing table matches us
+    // i.e. if the request is for http://localhost/foo
+    // We would look for this:  router.routes.GET['/foo'] and then run the function that's assigned
       let handler = router.routes[req.method][req.parsed.pathname];
       // If we have one, run the function contained within
       if (handler) {
         return handler(req,res);
       }
     })
-    // Otherwise, bug out with an error
+  // Otherwise, bug out with an error
     .catch(err => {
-      console.error('NOT_FOUND', req.parsed.pathname);
-      res.status = 404;
+      res.statusCode = 404;
       res.statusMessage = 'Not Found';
       res.write(`Resource Not Found (${req.parsed.pathname})`);
+      console.error('NOT_FOUND', req.parsed.pathname);
       res.end();
     });
 

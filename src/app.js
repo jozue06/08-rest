@@ -9,7 +9,7 @@ const api = require('./api/api.js');
 
 // Flag to know if we are up and going
 let isRunning = false;
-
+console.log(api);
 // This will open up an http server connection, using router.route
 // as our entry point.  That method will get run on every connection
 const app = http.createServer( router.route );

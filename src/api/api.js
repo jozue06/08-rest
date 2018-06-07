@@ -2,80 +2,71 @@
 
 const router = require('../lib/router.js');
 
-
 function routesHeader (res){
   res.statusCode = 200;
   res.statusMessage = 'OK';
 }
 
-
-
 router.get('/', (req,res) => {
   routesHeader(res);
   let name = req.query.name || '';
-  res.write(`Hello ${name}`);
+  res.write(`Hello drummer ${name}`);
   res.end();
 });
 
-router.get('/api/v1/fox-song', (req, res)=>{
-  routesHeader(res);
-  res.write(`what does the fox say?`);
-  res.end();
 
+router.get('/api',(req,res) =>{
+  res.statusCode = 400;
+  res.statusMessage = 'bad request';
+  res.end();
 });
 
-router.get('/api/v1/dogs', (req, res)=>{
-  routesHeader(res);
-  res.write(`all dog info`);
-  res.end();
-
-});
-
-router.get('/api/v1/dogs', (req, res)=>{
-  routesHeader(res);
-  res.write('whats up?');
-  res.end();
-
-});
-
-router.get('/api/v1/data', (req,res) => {
-  routesHeader(res);
-  res.write(req.query.text);
-  res.end();
+router.get('/api/v1/drums', (req, res)=>{
+  if(!req.query.id){
+    res.statusCode = 404;
+    res.statusMessage = 'not found';
+    return err;
+  }
+  else{
+    routesHeader(res);
+    res.write(`all drum info`, req.query.text);
+    res.end();
+  }
 });
 
 // test with httpie:
 //    echo '{"title":"Go Home","content":"foobar"}' | http post http://localhost:3333/data
  
-router.post('/api/v1/post/data', (req,res) => {
+router.post('/api/v1/drums', (req,res) => {
+  if(!req.body){
+    res.statusCode = 500;
+    res.statusMessage = 'no such record';
+    return err;}
+  else{
+    // routesHeader(res);
+    res.write( JSON.stringify(req.body) );
+    res.end();
+  }
+});
+
+router.put('/api/v1/drums', (req,res) => {
+  if(!req.query.id){return err;}
+  else if(!req.body){return err;}
+  else{
+    routesHeader(res);  
+    res.write(JSON.stringify(req.body));
+    res.end();
+  }
+  
+});
+
+
+router.delete('/api/v1/drums', (req,res) => {
   routesHeader(res);
-  console.log('posted');
-  res.write( JSON.stringify(req.body) );
+  res.write(`id: ${req.query.id} was deleted`);
   res.end();
 });
 
-router.put('/api/v1/put', (req,res) => {
-  routesHeader(res);
-  console.log('putted');
-  res.write(JSON.stringify(req.query.body.id));
-  res.end();
-});
-
-
-
-router.post('/api/v1/dogs', (req,res) => {
-  routesHeader(res);
-  console.log('posted');
-  res.write( JSON.stringify(req.body) );
-  res.end();
-});
-
-router.put('/api/v1/dogs', (req,res) => {
-  routesHeader(res);
-  console.log('putted');
-  res.write( JSON.stringify(req.body) );
-  res.end();
-});
 
 
 module.exports = {};

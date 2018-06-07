@@ -1,3 +1,4 @@
+
 'use strict';
 
 let router = require('../../src/lib/router.js');
@@ -25,25 +26,22 @@ describe('Router', () => {
     expect( Object.keys(router.routes.GET).length ).toEqual(3);
   });
 
-  it('can router get requests', () => {
+  it('can route get requests', () => {
     let expected = 'get/test';
     router.get('/test', () => expected);
-    let req = { method: 'GET', url: 'http://localhost:3333/test?john=bald' };//?
+    let req = { method: 'GET', url: 'http://localhost/test?john=bald' };
     let res = {};
     return router.route(req,res)
       .then( result => expect(result).toEqual(expected));
   });
 
-  it('can router post ', () => {
-    let expected = 'post/test';
-    router.post('/test', () => expected);
-    let req = { method: 'POST', url: 'http://localhost:3333/test?john=bald' };//?
+  it('can route get requests', () => {
+    let expected = '404';
+    router.get('/test', () => expected);
+    let req = { method: 'GET', url: 'http://localhost:3333/test?' };
     let res = {};
     return router.route(req,res)
       .then( result => expect(result).toEqual(expected));
   });
-
-
-  
 
 });
