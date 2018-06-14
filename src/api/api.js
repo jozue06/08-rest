@@ -29,7 +29,7 @@ router.get('/api/v1/drums', (req, res)=>{
   }
   else{
     routesHeader(res);
-    res.write(`all drum info`, req.query.text);
+    res.write(`drum info for ID: ${req.query.id}`);
     res.end();
   }
 });
